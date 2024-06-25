@@ -321,18 +321,16 @@ Optional argument REP is the replacement string of non-displayable character."
   "Get the formatted icon for DIR.
 ARGS should be a plist containing `:height', `:v-adjust',
 or `:face' properties."
-  (dashboard-replace-displayable
-   (pcase dashboard-icon-type
-     ('all-the-icons (apply #'all-the-icons-icon-for-dir dir args))
-     ('nerd-icons (apply #'nerd-icons-icon-for-dir dir args)))))
+  (pcase dashboard-icon-type
+    ('all-the-icons (apply #'all-the-icons-icon-for-dir dir args))
+    ('nerd-icons (apply #'nerd-icons-icon-for-dir dir args))))
 
 (defun dashboard-icon-for-file (file &rest args)
   "Get the formatted icon for FILE.
 ARGS should be a plist containing `:height', `:v-adjust', or `:face' properties."
-  (dashboard-replace-displayable
-   (pcase dashboard-icon-type
-     ('all-the-icons (apply #'all-the-icons-icon-for-file file args))
-     ('nerd-icons (apply #'nerd-icons-icon-for-file file args)))))
+  (pcase dashboard-icon-type
+    ('all-the-icons (apply #'all-the-icons-icon-for-file file args))
+    ('nerd-icons (apply #'nerd-icons-icon-for-file file args))))
 
 (defun dashboard-octicon (name &rest args)
   "Get the formatted octicon by NAME.
@@ -1322,7 +1320,7 @@ over custom backends."
          (lambda (project)
            "This function is used to switch to `PROJECT'."
            (let ((default-directory project))
-             (project-find-file))))
+             (project-dired))))
         (t
          (display-warning '(dashboard)
                           "Invalid value for `dashboard-projects-backend'"
