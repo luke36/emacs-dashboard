@@ -193,7 +193,7 @@ The value can be one of: `all-the-icons', `nerd-icons'."
 Will be of the form `(list-type . icon-name-string)`.
 If nil it is disabled.  Possible values for list-type are:
 `recents' `bookmarks' `projects' `agenda' `registers'"
-  :type  '(repeat (alist :key-type symbol :value-type string))
+  :type  '(alist :key-type symbol :value-type string)
   :group 'dashboard)
 
 (defcustom dashboard-heading-icon-height 1.2
@@ -793,7 +793,8 @@ Argument IMAGE-PATH path to the image."
         (if (file-exists-p txt)
             (insert-file-contents txt)
           (save-excursion (insert txt)))
-        (put-text-property (point) (point-max) 'face 'dashboard-text-banner)
+        (unless (text-properties-at 0 txt)
+          (put-text-property (point) (point-max) 'face 'dashboard-text-banner))
         (setq text-width 0)
         (while (not (eobp))
           (let ((line-length (- (line-end-position) (line-beginning-position))))
