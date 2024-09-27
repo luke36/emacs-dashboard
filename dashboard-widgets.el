@@ -53,6 +53,7 @@
 (declare-function org-get-todo-face "ext:org.el")
 (declare-function org-get-todo-state "ext:org.el")
 (declare-function org-in-archived-heading-p "ext:org.el")
+(declare-function org-link-display-format "ext:org.el")
 (declare-function org-map-entries "ext:org.el")
 (declare-function org-outline-level "ext:org.el")
 (declare-function org-release-buffers "ext:org.el")
@@ -212,6 +213,11 @@ If nil it is disabled.  Possible values for list-type are:
     ('nerd-icons (nerd-icons-octicon "nf-oct-dot_fill" :height 1.0 :v-adjust 0.01)))
   "Agenda item icon."
   :type 'string
+  :group 'dashboard)
+
+(defcustom dashboard-agenda-action 'dashboard-agenda--visit-file-other-window
+  "Function to call when dashboard make an action over agenda item."
+  :type 'function
   :group 'dashboard)
 
 (defcustom dashboard-remote-path-icon
@@ -1401,7 +1407,7 @@ different actions."
                 (org-get-category)
                 (dashboard-agenda--formatted-tags)))
          (todo-state (org-get-todo-state))
-         (item-priority (org-get-priority (org-get-heading t t t t)))
+         (item-priority (org-get-priority (org-get-heading t t nil t)))
          (todo-index (and todo-state
                           (length (member todo-state org-todo-keywords-1))))
          (entry-data (list 'dashboard-agenda-file (buffer-file-name)
@@ -1419,7 +1425,7 @@ different actions."
 
 (defun dashboard-agenda--formatted-headline ()
   "Set agenda faces to `HEADLINE' when face text property is nil."
-  (let* ((headline (org-get-heading t t t t))
+  (let* ((headline (org-link-display-format (org-get-heading t t t t)))
          (todo (or (org-get-todo-state) ""))
          (org-level-face (nth (- (org-outline-level) 1) org-level-faces))
          (todo-state (format org-agenda-todo-keyword-format todo)))
@@ -1566,6 +1572,19 @@ to compare."
      ((null arg2) t)
      (t (apply predicate (list arg1 arg2))))))
 
+(defun dashboard-agenda--visit-file (file point)
+  "Action on agenda-entry that visit a FILE at POINT."
+  (let ((buffer (find-file-noselect file)))
+    (with-current-buffer buffer
+      (goto-char point)
+      (switch-to-buffer buffer)
+      (recenter-top-bottom))))
+
+(defun dashboard-agenda--visit-file-other-window (file point)
+  "Visit FILE at POINT of an agenda item in other window."
+  (let ((buffer (find-file-other-window file)))
+    (with-current-buffer buffer (goto-char point) (recenter-top-bottom))))
+
 (defun dashboard-insert-agenda (list-size)
   "Add the list of LIST-SIZE items of agenda."
   (require 'org-agenda)
@@ -1578,10 +1597,9 @@ to compare."
    'agenda
    (dashboard-get-shortcut 'agenda)
    `(lambda (&rest _)
-      (let ((buffer (find-file-other-window (get-text-property 0 'dashboard-agenda-file ,el))))
-        (with-current-buffer buffer
-          (goto-char (get-text-property 0 'dashboard-agenda-loc ,el))
-          (switch-to-buffer buffer))))
+      (let ((file (get-text-property 0 'dashboard-agenda-file ,el))
+            (point (get-text-property 0 'dashboard-agenda-loc ,el)))
+        (funcall dashboard-agenda-action file point)))
    (format "%s" el)))
 
 ;;
