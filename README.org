@@ -103,7 +103,7 @@ To update the banner or banner title
   ;;    currently supported types are gif/image/text/xbm.
   ;;  - a cons of 2 strings which specifies the path of an image to use
   ;;    and other path of a text file to use if image isn't supported.
-  ;;    ("path/to/image/file/image.png" . "path/to/text/file/text.txt").
+  ;;    (cons "path/to/image/file/image.png" "path/to/text/file/text.txt").
   ;;  - a list that can display an random banner,
   ;;    supported values are: string (filepath), 'official, 'logo and integers.
 
@@ -196,6 +196,14 @@ To modify heading icons with another icon from nerd-icons octicons:
                                     (bookmarks . "nf-oct-book")))
 #+END_SRC
 
+To modify the icon height or vertical adjust:
+#+BEGIN_SRC emacs-lisp
+  (setq dashboard-icon-file-height 1.75)
+  (setq dashboard-icon-file-v-adjust -0.125)
+  (setq dashboard-heading-icon-height 1.75)
+  (setq dashboard-heading-icon-v-adjust -0.125)
+#+END_SRC
+
 To customize the buttons of the navigator like this:
 #+BEGIN_SRC emacs-lisp
   ;; Format: "(icon title help action face prefix suffix)"
@@ -227,6 +235,7 @@ Or
   (setq dashboard-projects-switch-function 'projectile-persp-switch-project)
 #+end_src
 
+Please check the [[./docs/variables-and-functions.org][complete list of variables and functions]].
 ** Org mode’s agenda
 
 To display today’s agenda items on the dashboard, add ~agenda~ to ~dashboard-items~:
@@ -358,6 +367,40 @@ This is accomplished with the following steps:
   make install
 #+END_SRC
 
-** Prerequisites
+Or, you can use [[https://github.com/emacs-eask/cli][Eask]] to set up
+the development environment, so there's no need to delete your local ~dashboard~.
 
-* [[https://github.com/emacs-eask/cli][Eask]]
+Install all dependencies and development dependencies:
+
+#+BEGIN_SRC shell
+  eask install-deps --dev
+#+END_SRC
+
+To test the package's installation:
+
+#+BEGIN_SRC shell
+  eask package
+  eask install
+#+END_SRC
+
+To test compilation:
+
+#+BEGIN_SRC shell
+  eask compile
+#+END_SRC
+
+🪧 The following steps are optional, but we recommend you follow these lint results!
+
+The built-in ~checkdoc~ linter:
+
+#+BEGIN_SRC shell
+  eask lint checkdoc
+#+END_SRC
+
+The standard ~package~ linter:
+
+#+BEGIN_SRC shell
+  eask lint package
+#+END_SRC
+
+/📝 P.S. For more information, find the Eask manual at https://emacs-eask.github.io/.
