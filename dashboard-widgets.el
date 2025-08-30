@@ -336,17 +336,18 @@ function the result of the function will be interpreted as the predicate value."
   "Replace non-displayable character from STR.
 
 Optional argument REP is the replacement string of non-displayable character."
-  (if (stringp str)
-      (let ((rep (or rep ""))
-            (results (list)))
-        (dolist (string (split-string str ""))
-          (let* ((char (string-to-char string))
-                 (string (if (char-displayable-p char)
-                             string
-                           rep)))
-            (push string results)))
-        (string-join (reverse results)))
-    ""))
+  ;; (if (stringp str)
+  ;;     (let ((rep (or rep ""))
+  ;;           (results (list)))
+  ;;       (dolist (string (split-string str ""))
+  ;;         (let* ((char (string-to-char string))
+  ;;                (string (if (char-displayable-p char)
+  ;;                            string
+  ;;                          rep)))
+  ;;           (push string results)))
+  ;;       (string-join (reverse results)))
+  ;;   "")
+  str)
 
 (defun dashboard-display-icons-p ()
   "Assert whether to show icons based on the `dashboard-display-icons-p' variable."
@@ -358,16 +359,18 @@ Optional argument REP is the replacement string of non-displayable character."
   "Get the formatted icon for DIR.
 ARGS should be a plist containing `:height', `:v-adjust',
 or `:face' properties."
-  (pcase dashboard-icon-type
-    ('all-the-icons (apply #'all-the-icons-icon-for-dir dir args))
-    ('nerd-icons (apply #'nerd-icons-icon-for-dir dir args))))
+  (dashboard-replace-displayable
+   (pcase dashboard-icon-type
+     ('all-the-icons (apply #'all-the-icons-icon-for-dir dir args))
+     ('nerd-icons (apply #'nerd-icons-icon-for-dir dir args)))))
 
 (defun dashboard-icon-for-file (file &rest args)
   "Get the formatted icon for FILE.
 ARGS should be a plist containing `:height', `:v-adjust', or `:face' properties."
-  (pcase dashboard-icon-type
-    ('all-the-icons (apply #'all-the-icons-icon-for-file file args))
-    ('nerd-icons (apply #'nerd-icons-icon-for-file file args))))
+  (dashboard-replace-displayable
+   (pcase dashboard-icon-type
+     ('all-the-icons (apply #'all-the-icons-icon-for-file file args))
+     ('nerd-icons (apply #'nerd-icons-icon-for-file file args)))))
 
 (defun dashboard-octicon (name &rest args)
   "Get the formatted octicon by NAME.
