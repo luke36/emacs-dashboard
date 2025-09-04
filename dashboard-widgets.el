@@ -590,10 +590,12 @@ Set to nil for unbounded."
 ;; TODO: Use function `string-pixel-width' after 29.1
 (defun dashboard-string-pixel-width (str)
   "Return the width of STR in pixels."
-  (if (fboundp #'string-pixel-width)
-      (string-pixel-width str)
-    (require 'shr)
-    (shr-string-pixel-width str)))
+  ;; (if (fboundp #'string-pixel-width)
+  ;;     (string-pixel-width str)
+  ;;   (require 'shr)
+  ;;   (shr-string-pixel-width str))
+  (* (string-width str) (default-font-width))
+  )
 
 (defun dashboard-str-len (str)
   "Calculate STR in pixel width."
