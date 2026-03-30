@@ -353,17 +353,18 @@ function the result of the function will be interpreted as the predicate value."
   "Replace non-displayable character from STR.
 
 Optional argument REP is the replacement string of non-displayable character."
-  (if (stringp str)
-      (let ((rep (or rep ""))
-            (results (list)))
-        (dolist (string (split-string str ""))
-          (let* ((char (string-to-char string))
-                 (string (if (char-displayable-p char)
-                             string
-                           rep)))
-            (push string results)))
-        (string-join (reverse results)))
-    ""))
+  ;; (if (stringp str)
+  ;;     (let ((rep (or rep ""))
+  ;;           (results (list)))
+  ;;       (dolist (string (split-string str ""))
+  ;;         (let* ((char (string-to-char string))
+  ;;                (string (if (char-displayable-p char)
+  ;;                            string
+  ;;                          rep)))
+  ;;           (push string results)))
+  ;;       (string-join (reverse results)))
+  ;;   "")
+  str)
 
 (defun dashboard-display-icons-p ()
   "Assert whether to show icons based on the `dashboard-display-icons-p' variable."
@@ -635,10 +636,11 @@ Set to nil for unbounded."
 ;; TODO: Use function `string-pixel-width' after 29.1
 (defun dashboard-string-pixel-width (str)
   "Return the width of STR in pixels."
-  (if (fboundp 'string-pixel-width)
-      (string-pixel-width str)
-    (require 'shr)
-    (shr-string-pixel-width str)))
+  ;; (if (fboundp 'string-pixel-width)
+  ;;     (string-pixel-width str)
+  ;;   (require 'shr)
+  ;;   (shr-string-pixel-width str))
+  (* (string-width str) (default-font-width)))
 
 (defun dashboard-str-len (str)
   "Calculate STR in pixel width."
